@@ -19,3 +19,6 @@ Website photo assets/
 website video assets/
 Vincent Lo Media Website notes.docx
 public/videos/originals-deploy-backup/
+
+# Local Netlify folder
+.netlify

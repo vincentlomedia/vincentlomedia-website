@@ -20,13 +20,14 @@ import clsx from 'clsx'
 import {
   canAddExpressDelivery,
   EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS,
-  EXPRESS_DELIVERY_PRICE_CAD,
+  EXPRESS_DELIVERY_PACKAGE_ID,
   type MeetPackage,
   type PackageBadge,
 } from '@/data/packages'
 import type { CheckoutFieldKey } from '@/data/checkoutFields'
 import { getCheckoutFields } from '@/data/checkoutFields'
 import { fadeUp } from '@/lib/motion'
+import type { PackagePrice, PackagePricesResponse } from '@/lib/packagePricing'
 
 // Category-specific graphic configs
 const CATEGORY_CONFIG = {
@@ -78,10 +79,22 @@ interface Props {
   autoPreview?: boolean
 }
 
+type PackagePriceState =
+  | { status: 'loading'; prices: Record<string, PackagePrice | null> }
+  | { status: 'ready'; prices: Record<string, PackagePrice | null> }
+  | { status: 'error'; prices: Record<string, PackagePrice | null> }
+
+let packagePricesCache: Record<string, PackagePrice | null> | undefined
+let packagePricesCacheExpiresAt = 0
+let packagePricesPromise: Promise<Record<string, PackagePrice | null>> | undefined
+const PACKAGE_PRICE_REFRESH_MS = 5 * 60 * 1000
+
 export default function PackageCard({ pkg, index = 0, autoPreview = false }: Props) {
   const [modalOpen, setModalOpen] = useState(false)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [isInView, setIsInView] = useState(false)
+  const packagePrices = usePackagePrices()
+  const livePrice = packagePrices.prices[pkg.id]
   const previewRef = useRef<HTMLVideoElement | null>(null)
   const cardRef = useRef<HTMLElement | null>(null)
   const prefersReduced = useReducedMotion()
@@ -271,22 +284,7 @@ export default function PackageCard({ pkg, index = 0, autoPreview = false }: Pro
 
         {/* Price + CTA */}
         <div className="flex items-end justify-between mt-auto pt-4 border-t border-white/5">
-          <div>
-            {pkg.salePriceCad ? (
-              <>
-                <span className="text-zinc-600 line-through text-sm mr-2">
-                  {formatCad(pkg.priceCad)}
-                </span>
-                <span className="text-2xl font-display text-gold">
-                  {formatCad(pkg.salePriceCad)}
-                </span>
-              </>
-            ) : (
-              <span className="text-2xl font-display text-white">
-                {formatCad(pkg.priceCad)}
-              </span>
-            )}
-          </div>
+          <PriceDisplay price={livePrice} placeholderPrice={pkg.priceCad} status={packagePrices.status} />
           <button
             type="button"
             onClick={() => setCheckoutOpen(true)}
@@ -305,7 +303,7 @@ export default function PackageCard({ pkg, index = 0, autoPreview = false }: Pro
             <PreviewModal pkg={pkg} onClose={() => setModalOpen(false)} />
           )}
           {checkoutOpen && (
-            <CheckoutModal pkg={pkg} onClose={() => setCheckoutOpen(false)} />
+            <CheckoutModal pkg={pkg} packagePrices={packagePrices} onClose={() => setCheckoutOpen(false)} />
           )}
         </AnimatePresence>
       </ModalPortal>
@@ -325,7 +323,113 @@ function ModalPortal({ children }: { children: ReactNode }) {
   return createPortal(children, document.body)
 }
 
-function CheckoutModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void }) {
+function usePackagePrices(): PackagePriceState {
+  const [state, setState] = useState<PackagePriceState>(() => ({
+    status: packagePricesCache ? 'ready' : 'loading',
+    prices: packagePricesCache ?? {},
+  }))
+
+  useEffect(() => {
+    let cancelled = false
+
+    const refresh = () => {
+      loadPackagePrices()
+        .then((prices) => {
+          if (!cancelled) setState({ status: 'ready', prices })
+        })
+        .catch(() => {
+          if (!cancelled) setState({ status: 'error', prices: packagePricesCache ?? {} })
+        })
+    }
+
+    refresh()
+    const interval = window.setInterval(refresh, PACKAGE_PRICE_REFRESH_MS)
+
+    return () => {
+      cancelled = true
+      window.clearInterval(interval)
+    }
+  }, [])
+
+  return state
+}
+
+async function loadPackagePrices() {
+  if (packagePricesCache && packagePricesCacheExpiresAt > Date.now()) return packagePricesCache
+
+  packagePricesPromise ??= fetch('/api/package-prices', { cache: 'no-store' })
+    .then(async (response) => {
+      if (!response.ok) throw new Error('Package prices are unavailable.')
+      return (await response.json()) as PackagePricesResponse
+    })
+    .then((data) => {
+      packagePricesCache = data.prices
+      packagePricesCacheExpiresAt = Date.now() + PACKAGE_PRICE_REFRESH_MS
+      return data.prices
+    })
+    .finally(() => {
+      packagePricesPromise = undefined
+    })
+
+  return packagePricesPromise
+}
+
+function PriceDisplay({
+  price,
+  placeholderPrice,
+  status,
+}: {
+  price: PackagePrice | null | undefined
+  placeholderPrice: number
+  status: PackagePriceState['status']
+}) {
+  if (!price && status === 'loading') {
+    return (
+      <div>
+        <span className="text-2xl font-display text-white/65">{formatMoney(placeholderPrice, 'CAD')}</span>
+      </div>
+    )
+  }
+
+  if (!price) {
+    return (
+      <div>
+        <span className="font-display text-xl uppercase text-white/55">Price unavailable</span>
+      </div>
+    )
+  }
+
+  if (price.onSale && typeof price.salePrice === 'number') {
+    return (
+      <div>
+        <span className="text-zinc-600 line-through text-sm mr-2">
+          {formatMoney(price.basePrice, price.currency)}
+        </span>
+        <span className="text-2xl font-display text-gold">
+          {formatMoney(price.salePrice, price.currency)}
+        </span>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <span className="text-2xl font-display text-white">
+        {formatMoney(price.basePrice, price.currency)}
+      </span>
+    </div>
+  )
+}
+
+function CheckoutModal({
+  pkg,
+  packagePrices,
+  onClose,
+}: {
+  pkg: MeetPackage
+  packagePrices: PackagePriceState
+  onClose: () => void
+}) {
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -343,6 +447,7 @@ function CheckoutModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void
   const checkoutFields = getCheckoutFields(pkg.id)
   const expressDeliveryAvailable = canAddExpressDelivery(pkg.id)
   const expressDeliveryUnavailableForGalleryPhotos = EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS.includes(pkg.id)
+  const expressDeliveryPrice = packagePrices.prices[EXPRESS_DELIVERY_PACKAGE_ID]
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -521,8 +626,7 @@ function CheckoutModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void
                   Add Express Delivery?
                 </span>
                 <span className="mt-1 block text-sm leading-relaxed text-zinc-400">
-                  Yes, add priority editing for +{formatCad(EXPRESS_DELIVERY_PRICE_CAD)}. This cuts the
-                  delivery window roughly in half and will be added to the Squarespace checkout.
+                  {formatExpressDeliveryCopy(expressDeliveryPrice, packagePrices.status)}
                 </span>
               </span>
             </label>
@@ -733,8 +837,28 @@ function PreviewModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void 
   )
 }
 
-function formatCad(value: number) {
-  return `$${value.toLocaleString('en-CA', {
+function formatExpressDeliveryCopy(
+  price: PackagePrice | null | undefined,
+  status: PackagePriceState['status'],
+) {
+  if (price) {
+    return `Yes, add priority editing for +${formatMoney(
+      price.onSale && typeof price.salePrice === 'number' ? price.salePrice : price.basePrice,
+      price.currency,
+    )}. This cuts the delivery window roughly in half and will be added to the Squarespace checkout.`
+  }
+
+  if (status === 'loading') {
+    return 'Yes, add priority editing. The current Squarespace price is loading and checkout will confirm the final amount.'
+  }
+
+  return 'Yes, add priority editing. The current Squarespace price is temporarily unavailable here, and checkout will confirm the final amount.'
+}
+
+function formatMoney(value: number, currency: string) {
+  const locale = currency === 'CAD' ? 'en-CA' : 'en-US'
+
+  return `${currency === 'CAD' || currency === 'USD' ? '$' : ''}${value.toLocaleString(locale, {
     minimumFractionDigits: value % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2,
   })}`

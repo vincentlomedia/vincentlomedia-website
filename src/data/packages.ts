@@ -22,7 +22,7 @@
 export type PackageCategory = 'bundle' | 'photo' | 'video' | 'bench' | 'addon' | 'event'
 export type FilterId = PackageCategory | 'all' | 'bestseller'
 export const EXPRESS_DELIVERY_PACKAGE_ID = 'addon-express-delivery'
-export const EXPRESS_DELIVERY_PRICE_CAD = 35
+export const EXPRESS_DELIVERY_PLACEHOLDER_PRICE_CAD = 35
 export const EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS = ['photo-single', 'photo-5-pack', 'photo-10-pack']
 
 export type PackageBadge = 'Most Popular' | 'Best Value' | 'Best Price' | 'For Coaches' | 'New'
@@ -33,7 +33,6 @@ export interface MeetPackage {
   slug: string
   category: PackageCategory
   priceCad: number
-  salePriceCad?: number
   badges: PackageBadge[]
   tagline: string
   description: string
@@ -61,7 +60,6 @@ export const packages: MeetPackage[] = [
     slug: 'ultimate-package-all-media',
     category: 'bundle',
     priceCad: 299,
-    salePriceCad: 225,
     badges: ['Most Popular', 'Best Value'],
     tagline: 'The complete meet day experience.',
     description:
@@ -86,7 +84,6 @@ export const packages: MeetPackage[] = [
     slug: 'edited-photos-and-highlight-reel',
     category: 'bundle',
     priceCad: 240,
-    salePriceCad: 225,
     badges: ['Most Popular'],
     tagline: 'Photos plus the social-ready edit.',
     description:
@@ -110,7 +107,6 @@ export const packages: MeetPackage[] = [
     slug: 'full-power-photos-and-static-videos',
     category: 'bundle',
     priceCad: 205,
-    salePriceCad: 195,
     badges: ['Best Value'],
     tagline: 'Photos and static lifts, combined.',
     description:
@@ -131,7 +127,6 @@ export const packages: MeetPackage[] = [
     slug: 'highlight-reel-and-static-videos',
     category: 'bundle',
     priceCad: 225,
-    salePriceCad: 200,
     badges: ['Best Value', 'New'],
     tagline: 'Every video format in one bundle.',
     description:
@@ -155,7 +150,6 @@ export const packages: MeetPackage[] = [
     slug: '3-lift-highlight-reel',
     category: 'video',
     priceCad: 150,
-    salePriceCad: 140,
     badges: ['Most Popular'],
     tagline: 'Your lifts. Cinematic.',
     description:
@@ -177,7 +171,6 @@ export const packages: MeetPackage[] = [
     slug: '9-lift-static-videos',
     category: 'video',
     priceCad: 125,
-    salePriceCad: 115,
     badges: ['For Coaches'],
     tagline: 'Every attempt. Every lift.',
     description:
@@ -196,7 +189,6 @@ export const packages: MeetPackage[] = [
     slug: '3-attempts-video',
     category: 'video',
     priceCad: 60,
-    salePriceCad: 52.5,
     badges: [],
     tagline: 'All 3 attempts of one lift.',
     description:
@@ -215,7 +207,6 @@ export const packages: MeetPackage[] = [
     slug: 'single-attempt-video',
     category: 'video',
     priceCad: 25,
-    salePriceCad: 20,
     badges: ['Best Price'],
     tagline: 'One lift. One attempt.',
     description:
@@ -236,7 +227,6 @@ export const packages: MeetPackage[] = [
     slug: 'edited-photo-package',
     category: 'photo',
     priceCad: 125,
-    salePriceCad: 115,
     badges: ['Most Popular'],
     tagline: 'Every lift, beautifully captured.',
     description:
@@ -255,7 +245,6 @@ export const packages: MeetPackage[] = [
     slug: '10-pack-photo',
     category: 'photo',
     priceCad: 75,
-    salePriceCad: 52.5,
     badges: [],
     tagline: 'Choose your ten best.',
     description:
@@ -273,7 +262,6 @@ export const packages: MeetPackage[] = [
     slug: '5-pack-photo',
     category: 'photo',
     priceCad: 45,
-    salePriceCad: 31.5,
     badges: [],
     tagline: 'Your five favourite moments.',
     description:
@@ -291,7 +279,6 @@ export const packages: MeetPackage[] = [
     slug: 'single-photo',
     category: 'photo',
     priceCad: 15,
-    salePriceCad: 10,
     badges: ['Best Price'],
     tagline: 'One perfect shot.',
     description:
@@ -311,7 +298,6 @@ export const packages: MeetPackage[] = [
     slug: 'bench-only-highlight-reel',
     category: 'bench',
     priceCad: 85,
-    salePriceCad: 75,
     badges: ['Best Price'],
     tagline: 'Static bench video for review and posting.',
     description:
@@ -334,7 +320,6 @@ export const packages: MeetPackage[] = [
     slug: '9-lift-static-videos-last-chance-meet',
     category: 'event',
     priceCad: 125,
-    salePriceCad: 115,
     badges: ['For Coaches'],
     tagline: 'Meet-specific coverage: Last Chance Meet.',
     description:
@@ -355,7 +340,7 @@ export const packages: MeetPackage[] = [
     name: 'Express Delivery',
     slug: 'express-delivery',
     category: 'addon',
-    priceCad: EXPRESS_DELIVERY_PRICE_CAD,
+    priceCad: EXPRESS_DELIVERY_PLACEHOLDER_PRICE_CAD,
     badges: [],
     tagline: 'Get your media faster.',
     description:
