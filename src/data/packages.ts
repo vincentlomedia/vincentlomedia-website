@@ -21,6 +21,9 @@
 
 export type PackageCategory = 'bundle' | 'photo' | 'video' | 'bench' | 'addon' | 'event'
 export type FilterId = PackageCategory | 'all' | 'bestseller'
+export const EXPRESS_DELIVERY_PACKAGE_ID = 'addon-express-delivery'
+export const EXPRESS_DELIVERY_PRICE_CAD = 35
+export const EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS = ['photo-single', 'photo-5-pack', 'photo-10-pack']
 
 export type PackageBadge = 'Most Popular' | 'Best Value' | 'Best Price' | 'For Coaches' | 'New'
 
@@ -324,26 +327,6 @@ export const packages: MeetPackage[] = [
     sampleVideoOrientation: 'portrait',
   },
 
-  // ── ADD-ON ────────────────────────────────────────────────────────────────
-  {
-    id: 'addon-express-delivery',
-    name: 'Express Delivery',
-    slug: 'express-delivery',
-    category: 'addon',
-    priceCad: 35,
-    badges: [],
-    tagline: 'Get your media faster.',
-    description:
-      'Priority editing queue — cuts your delivery window roughly in half. Add to any package at checkout.',
-    deliverables: {
-      addon: 'Priority editing queue — delivery cut in half across all media types',
-    },
-    deliveryWindow: 'Photos: 3-7 days · Videos: 7-14 days · Reel: 14-21 days',
-    squarespaceUrl: 'https://www.vincentlomedia.com/store/p/express-delivery',
-    samplePhotoPath:
-      'https://images.squarespace-cdn.com/content/v1/65a4df859a6f1146aa8ee1b6/1712917546778-83A97JBJ252MTN0MHYHC/express+delivery.jpg',
-  },
-
   // ── EVENT-SPECIFIC ────────────────────────────────────────────────────────
   {
     id: 'event-last-chance-meet',
@@ -365,7 +348,34 @@ export const packages: MeetPackage[] = [
     sampleVideoPath: '/videos/sample-squat.mp4',
     previewVideoPath: '/videos/previews/squat-preview.mp4',
   },
+
+  // ── ADD-ON ────────────────────────────────────────────────────────────────
+  {
+    id: EXPRESS_DELIVERY_PACKAGE_ID,
+    name: 'Express Delivery',
+    slug: 'express-delivery',
+    category: 'addon',
+    priceCad: EXPRESS_DELIVERY_PRICE_CAD,
+    badges: [],
+    tagline: 'Get your media faster.',
+    description:
+      'Priority editing queue — cuts your delivery window roughly in half. Add to any eligible package at checkout.',
+    deliverables: {
+      addon: 'Priority editing queue — delivery cut in half across most media types',
+    },
+    deliveryWindow: 'Photos: 3-7 days · Videos: 7-14 days · Reel: 14-21 days',
+    squarespaceUrl: 'https://www.vincentlomedia.com/store/p/express-delivery',
+    samplePhotoPath:
+      'https://images.squarespace-cdn.com/content/v1/65a4df859a6f1146aa8ee1b6/1712917546778-83A97JBJ252MTN0MHYHC/express+delivery.jpg',
+  },
 ]
+
+export function canAddExpressDelivery(packageId: string) {
+  return (
+    packageId !== EXPRESS_DELIVERY_PACKAGE_ID &&
+    !EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS.includes(packageId)
+  )
+}
 
 export const FILTERS: { id: FilterId; label: string }[] = [
   { id: 'all', label: 'All' },

@@ -89,3 +89,16 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
+
+@keyframes testimonial-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.testimonial-carousel-track {
+  animation: testimonial-scroll 95s linear infinite;
+}

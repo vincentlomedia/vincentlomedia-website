@@ -50,7 +50,12 @@ type PackageChooserProps = {
 
 export default function PackageChooser({ compactMobile = false }: PackageChooserProps) {
   return (
-    <section className={clsx('bg-vlm-black md:py-24 lg:py-32', compactMobile ? 'py-4' : 'py-6')}>
+    <section
+      className={clsx(
+        'bg-vlm-black',
+        compactMobile ? 'py-4 md:pb-10 md:pt-24 lg:pb-12 lg:pt-32' : 'py-6 md:py-24 lg:py-32',
+      )}
+    >
       <div className="section-shell">
         {compactMobile && (
           <div className="mb-3 flex items-center justify-between gap-3 md:hidden">

@@ -17,7 +17,13 @@ import {
   Zap,
 } from 'lucide-react'
 import clsx from 'clsx'
-import type { MeetPackage, PackageBadge } from '@/data/packages'
+import {
+  canAddExpressDelivery,
+  EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS,
+  EXPRESS_DELIVERY_PRICE_CAD,
+  type MeetPackage,
+  type PackageBadge,
+} from '@/data/packages'
 import type { CheckoutFieldKey } from '@/data/checkoutFields'
 import { getCheckoutFields } from '@/data/checkoutFields'
 import { fadeUp } from '@/lib/motion'
@@ -331,10 +337,13 @@ function CheckoutModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void
     attemptWeightPreference: '',
     phone: '',
     notes: '',
+    expressDelivery: false,
   })
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const checkoutFields = getCheckoutFields(pkg.id)
+  const expressDeliveryAvailable = canAddExpressDelivery(pkg.id)
+  const expressDeliveryUnavailableForGalleryPhotos = EXPRESS_DELIVERY_EXCLUDED_PACKAGE_IDS.includes(pkg.id)
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -350,6 +359,10 @@ function CheckoutModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       setForm((current) => ({ ...current, [field]: event.target.value }))
     }
+
+  const updateExpressDelivery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((current) => ({ ...current, expressDelivery: event.target.checked }))
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -495,6 +508,33 @@ function CheckoutModal({ pkg, onClose }: { pkg: MeetPackage; onClose: () => void
               />
             )
           })}
+
+          {expressDeliveryAvailable && (
+            <label className="flex gap-3 rounded border border-white/10 bg-black/40 p-3">
+              <input
+                type="checkbox"
+                checked={form.expressDelivery}
+                onChange={updateExpressDelivery}
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-black accent-gold"
+              />
+              <span className="block">
+                <span className="mono-label block text-[10px] text-white/70">
+                  Add Express Delivery?
+                </span>
+                <span className="mt-1 block text-sm leading-relaxed text-zinc-400">
+                  Yes, add priority editing for +{formatCad(EXPRESS_DELIVERY_PRICE_CAD)}. This cuts the
+                  delivery window roughly in half and will be added to the Squarespace checkout.
+                </span>
+              </span>
+            </label>
+          )}
+
+          {expressDeliveryUnavailableForGalleryPhotos && (
+            <p className="rounded border border-white/10 bg-black/40 p-3 text-sm leading-relaxed text-zinc-400">
+              Express Delivery is unavailable for Single Photo, 5 Pack Photo, and 10 Pack Photo because
+              photos are sent once the gallery is live.
+            </p>
+          )}
 
           {error && (
             <p className="border border-red-400/25 bg-red-400/10 px-3 py-2 text-sm text-red-200">

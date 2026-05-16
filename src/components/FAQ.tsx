@@ -18,7 +18,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: 'How do I receive my photos and videos?',
-    a: "All media is delivered via a private Google Drive folder. After the meet, you'll receive a download link by email. No app download or subscription is required.",
+    a: 'Video packages are delivered through Google Drive. Photo galleries are uploaded to the Galleries page, where clients can browse their meet gallery and choose the photo package they want to purchase.',
   },
   {
     q: 'How long does delivery take?',
@@ -30,7 +30,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: 'Can I buy after the competition?',
-    a: "Yes — packages can be purchased after the meet as long as VLM was present and shooting. Coverage is not guaranteed if you didn't purchase before the meet, but if footage is available, orders are accepted. Contact to confirm availability.",
+    a: 'Yes. All media packages are available after the competition because VLM captures media for every competitor whether they purchased before the meet or not.',
   },
   {
     q: 'What is included in bundle packages?',

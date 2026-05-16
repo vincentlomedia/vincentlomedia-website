@@ -10,6 +10,7 @@ import clsx from 'clsx'
 const LINKS = [
   { href: '/', label: 'Home' },
   { href: '/packages', label: 'Packages' },
+  { href: '/galleries', label: 'Galleries' },
   { href: '/#samples', label: 'Samples' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },

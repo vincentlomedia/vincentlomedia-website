@@ -1,8 +1,9 @@
-// SEO_TITLE: About | Vincent Lo Media | Powerlifting Photographer
-// SEO_DESC:  Vincent Lo Media is run by a competitive powerlifter who understands the sport from the inside.
+// SEO_TITLE: About | Vincent Lo Media | Powerlifting Media Team
+// SEO_DESC:  Vincent Lo Media is a powerlifting media team that understands the sport from the inside.
 
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Camera, Dumbbell, MapPin } from 'lucide-react'
@@ -11,10 +12,37 @@ import Footer from '@/components/Footer'
 import { stagger, fadeUp, viewportOnce } from '@/lib/motion'
 
 const STATS = [
-  { value: '5+', label: 'Years competing in powerlifting' },
-  { value: '20+', label: 'Meets covered as photographer' },
+  { value: '5+', label: 'Years on the platform' },
+  { value: '20+', label: 'Meets covered by VLM' },
   { value: '1000+', label: 'Competition photos delivered' },
   { value: '$15', label: 'Starting price in CAD' },
+]
+
+const PROMO_VIDEOS = [
+  {
+    src: '/videos/about/hero-hq.mp4',
+    fallbackSrc: '/videos/hero.mp4',
+    poster: '/photos/_MG_0658.jpg',
+    label: 'Meet day coverage',
+  },
+  {
+    src: '/videos/about/promo-1-hq.mp4',
+    fallbackSrc: '/videos/promo-1.mp4',
+    poster: '/photos/_MG_0821.jpg',
+    label: 'Platform perspective',
+  },
+  {
+    src: '/videos/about/promo-2-hq.mp4',
+    fallbackSrc: '/videos/promo-2.mp4',
+    poster: '/photos/_MG_0327.jpg',
+    label: 'Athlete-first media',
+  },
+  {
+    src: '/videos/about/promo-4-hq.mp4',
+    fallbackSrc: '/videos/promo-4.mp4',
+    poster: '/photos/_MG_2249.jpg',
+    label: 'Competition atmosphere',
+  },
 ]
 
 export default function AboutPage() {
@@ -37,17 +65,17 @@ export default function AboutPage() {
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div variants={stagger} initial="hidden" animate="visible" className="max-w-2xl">
               <motion.p variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-gold font-display font-semibold mb-3">
-                The Photographer
+                The Team
               </motion.p>
               <motion.h1 variants={fadeUp} className="font-display font-black uppercase text-5xl md:text-6xl xl:text-7xl tracking-tight text-white mb-5">
-                A Powerlifter
+                Powerlifters
                 <br />
                 Behind the Lens
               </motion.h1>
               <motion.p variants={fadeUp} className="text-zinc-400 text-base leading-relaxed">
-                Vincent Lo Media is run by a competitive powerlifter. That means the person
-                shooting your meet has stood on the same platform, felt the same nerves, and
-                knows exactly which moments matter.
+                Vincent Lo Media is a growing team built around powerlifters. That means the
+                people shooting your meet understand the platform from lived experience: the
+                nerves, the timing, and the moments athletes actually care about.
               </motion.p>
             </motion.div>
           </div>
@@ -79,10 +107,10 @@ export default function AboutPage() {
                 viewport={viewportOnce}
                 className="relative"
               >
-                {/* ASSET: public/photos/_MG_2420.jpg — good portrait/action candidate */}
+                {/* ASSET: public/photos/vincent-lo-headshot.png — Vincent Lo headshot from Drive */}
                 <img
-                  src="/photos/_MG_2420.jpg"
-                  alt="Vincent Lo competing in powerlifting"
+                  src="/photos/vincent-lo-headshot.png"
+                  alt="Vincent Lo"
                   className="w-full aspect-[3/4] object-cover rounded-md"
                   loading="lazy"
                 />
@@ -123,8 +151,14 @@ export default function AboutPage() {
                       what he knew as an athlete.
                     </p>
                     <p>
-                      Every meet VLM covers gets the same treatment: real attention to the
-                      lift, not just a shutter at the top. The photos look the way
+                      VLM has grown beyond a one-person setup into an expanding crew made
+                      primarily of powerlifters. The team knows what it feels like to wait for
+                      a third attempt, read the room before a big pull, and understand why a
+                      small moment between lifts can matter as much as the lift itself.
+                    </p>
+                    <p>
+                      Every meet we cover gets the same athlete-first treatment: real attention
+                      to the lift, not just a shutter at the top. The media looks the way
                       powerlifting feels — heavy, deliberate, and earned.
                     </p>
                   </div>
@@ -134,7 +168,7 @@ export default function AboutPage() {
                 <motion.div variants={fadeUp} className="space-y-3 mb-8">
                   {[
                     { icon: Dumbbell, text: 'Sanctioned powerlifting meets across Canada' },
-                    { icon: Camera, text: 'Gym shoots, brand content, team coverage' },
+                    { icon: Camera, text: 'Powerlifter-led photo and video coverage' },
                     { icon: MapPin, text: 'Based in Victoria, BC — available for travel' },
                   ].map(({ icon: Icon, text }) => (
                     <div key={text} className="flex items-center gap-3 text-sm text-zinc-300">
@@ -158,25 +192,38 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Photo grid — equipment/approach */}
+        {/* Promo video grid */}
         <section className="pb-20 bg-vlm-black">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                '/photos/_MG_0839.jpg',
-                '/photos/_MG_0837.jpg',
-                '/photos/DSCF2590.jpg',
-                '/photos/DSCF2597.jpg',
-                '/photos/_MG_2191.jpg',
-                '/photos/DSCF2393.jpg',
-              ].map((src, i) => (
-                <div key={i} className="aspect-square overflow-hidden rounded bg-vlm-card">
-                  <img
-                    src={src}
-                    alt={`Competition photography sample ${i + 1}`}
-                    loading="lazy"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
+            <div className="mb-6 flex flex-col justify-between gap-3 border-t border-white/10 pt-8 md:flex-row md:items-end">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-gold font-display font-semibold mb-3">
+                  VLM in motion
+                </p>
+                <h2 className="font-display font-bold text-3xl md:text-4xl uppercase text-white">
+                  Meet Day Media
+                </h2>
+              </div>
+              <p className="max-w-md text-sm leading-relaxed text-zinc-500">
+                Promo clips from real competition coverage, cut for the pace and pressure of the platform.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {PROMO_VIDEOS.map((video, i) => (
+                <div
+                  key={video.src}
+                  className="group relative overflow-hidden rounded-md border border-white/10 bg-vlm-card"
+                >
+                  <PromoVideoTile video={video} />
+                  <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-3">
+                    <span className="mono-label text-[10px] text-white/70">
+                      0{i + 1}
+                    </span>
+                    <span className="h-px w-8 bg-white/20" />
+                    <span className="mono-label text-[10px] text-white/70">
+                      {video.label}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -185,5 +232,28 @@ export default function AboutPage() {
       </main>
       <Footer />
     </>
+  )
+}
+
+function PromoVideoTile({ video }: { video: (typeof PROMO_VIDEOS)[number] }) {
+  const [src, setSrc] = useState(video.src)
+
+  return (
+    <video
+      src={src}
+      poster={video.poster}
+      className="aspect-video w-full object-cover opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+      autoPlay
+      muted
+      loop
+      playsInline
+      controls
+      preload="metadata"
+      onError={() => {
+        if (src !== video.fallbackSrc) {
+          setSrc(video.fallbackSrc)
+        }
+      }}
+    />
   )
 }

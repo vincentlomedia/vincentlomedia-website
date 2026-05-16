@@ -3,6 +3,7 @@ import Link from 'next/link'
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/packages', label: 'Media Packages' },
+  { href: '/galleries', label: 'Galleries' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ]

@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server'
-import { packages } from '@/data/packages'
+import {
+  canAddExpressDelivery,
+  EXPRESS_DELIVERY_PACKAGE_ID,
+  packages,
+} from '@/data/packages'
 import { getCheckoutFields } from '@/data/checkoutFields'
 
 type CheckoutForm = {
@@ -12,6 +16,7 @@ type CheckoutForm = {
   attemptWeightPreference?: string
   phone?: string
   notes?: string
+  expressDelivery?: boolean
 }
 
 type SquarespaceProduct = {
@@ -31,93 +36,80 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as { packageId?: string; form?: CheckoutForm }
     const pkg = packages.find((item) => item.id === body.packageId)
+    const expressPackage = packages.find((item) => item.id === EXPRESS_DELIVERY_PACKAGE_ID)
 
     if (!pkg) {
       return NextResponse.json({ error: 'Package not found.' }, { status: 404 })
     }
 
     const form = normalizeForm(body.form)
+    if (form.expressDelivery && !canAddExpressDelivery(pkg.id)) {
+      return NextResponse.json(
+        { error: 'Express Delivery is not available for this package.' },
+        { status: 400 },
+      )
+    }
+
+    if (form.expressDelivery && !expressPackage) {
+      return NextResponse.json(
+        { error: 'Express Delivery checkout details are unavailable.' },
+        { status: 502 },
+      )
+    }
+
     const checkoutFields = getCheckoutFields(pkg.id)
     const validationError = validateRequiredFields(checkoutFields, form)
     if (validationError) {
       return NextResponse.json({ error: validationError }, { status: 400 })
     }
 
-    const productUrl = pkg.squarespaceUrl
-    const productResponse = await fetch(`${productUrl}?format=json`, {
-      headers: {
-        accept: 'application/json',
-        'user-agent': 'Mozilla/5.0',
-      },
-      cache: 'no-store',
-    })
-
-    if (!productResponse.ok) {
-      return NextResponse.json(
-        { error: 'Could not load the Squarespace product.' },
-        { status: 502 },
-      )
-    }
-
-    const crumb = productResponse.headers.get('set-cookie')?.match(/crumb=([^;]+)/)?.[1]
-    const product = (await productResponse.json()) as SquarespaceProduct
-    const variant = product.item.variants?.[0]
-
-    if (!crumb || !variant?.sku) {
-      return NextResponse.json(
-        { error: 'Squarespace checkout details are unavailable for this product.' },
-        { status: 502 },
-      )
-    }
+    const productDetails = await loadSquarespaceProduct(pkg.squarespaceUrl)
 
     const additionalFields = buildAdditionalFields(checkoutFields, form)
-    const addToCartId = crypto.randomUUID()
-
-    const cartResponse = await fetch('https://www.vincentlomedia.com/api/commerce/shopping-cart/entries', {
-      method: 'POST',
-      headers: {
-        'add-to-cart-id': addToCartId,
-        'content-type': 'application/json',
-        cookie: `crumb=${crumb}`,
-        origin: 'https://www.vincentlomedia.com',
-        referer: productUrl,
-        'user-agent': 'Mozilla/5.0',
-        'x-csrf-token': crumb,
-      },
-      body: JSON.stringify({
-        itemId: product.item.id,
-        sku: variant.sku,
-        quantity: 1,
-        additionalFields: JSON.stringify(additionalFields),
-      }),
+    const cart = await addSquarespaceCartEntry({
+      details: productDetails,
+      additionalFields,
     })
 
-    const cartText = await cartResponse.text()
-    let cartJson: any = null
-    try {
-      cartJson = JSON.parse(cartText)
-    } catch {
-      cartJson = null
-    }
-
-    if (!cartResponse.ok || !cartJson?.shoppingCart?.cartToken) {
-      const squarespaceMessage =
-        cartJson?.error === 'Form Errors'
-          ? parseFormError(cartJson.errors)
-          : cartJson?.message || cartJson?.error
-
+    if (!cart.ok) {
       return NextResponse.json(
         {
-          error: squarespaceMessage || 'Squarespace could not create a checkout cart.',
-          productUrl,
+          error: cart.error || 'Squarespace could not create a checkout cart.',
+          productUrl: pkg.squarespaceUrl,
         },
         { status: 502 },
       )
     }
 
+    let checkoutCartToken = cart.cartToken
+    let cartCookie = cart.cookie
+
+    if (form.expressDelivery && expressPackage) {
+      const expressDetails = await loadSquarespaceProduct(expressPackage.squarespaceUrl)
+      const expressCart = await addSquarespaceCartEntry({
+        details: expressDetails,
+        cartCookie,
+      })
+
+      if (!expressCart.ok) {
+        return NextResponse.json(
+          {
+            error:
+              expressCart.error ||
+              'The main package was added, but Squarespace could not add Express Delivery.',
+            productUrl: pkg.squarespaceUrl,
+          },
+          { status: 502 },
+        )
+      }
+
+      checkoutCartToken = expressCart.cartToken
+      cartCookie = expressCart.cookie || cartCookie
+    }
+
     return NextResponse.json({
       checkoutUrl: `https://www.vincentlomedia.com/checkout?cartToken=${encodeURIComponent(
-        cartJson.shoppingCart.cartToken,
+        checkoutCartToken,
       )}`,
     })
   } catch (error) {
@@ -140,7 +132,107 @@ function normalizeForm(form: CheckoutForm | undefined) {
     attemptWeightPreference: form?.attemptWeightPreference?.trim() ?? '',
     phone: form?.phone?.trim() ?? '',
     notes: form?.notes?.trim() ?? '',
+    expressDelivery: form?.expressDelivery === true,
   }
+}
+
+async function loadSquarespaceProduct(productUrl: string) {
+  const productResponse = await fetch(`${productUrl}?format=json`, {
+    headers: {
+      accept: 'application/json',
+      'user-agent': 'Mozilla/5.0',
+    },
+    cache: 'no-store',
+  })
+
+  if (!productResponse.ok) {
+    throw new Error('Could not load the Squarespace product.')
+  }
+
+  const cookie = productResponse.headers.get('set-cookie') ?? ''
+  const crumb = cookie.match(/crumb=([^;]+)/)?.[1]
+  const product = (await productResponse.json()) as SquarespaceProduct
+  const variant = product.item.variants?.[0]
+
+  if (!crumb || !variant?.sku) {
+    throw new Error('Squarespace checkout details are unavailable for this product.')
+  }
+
+  return {
+    productUrl,
+    crumb,
+    cookie: cookieHeaderFromSetCookie(cookie),
+    itemId: product.item.id,
+    sku: variant.sku,
+  }
+}
+
+async function addSquarespaceCartEntry({
+  details,
+  additionalFields = {},
+  cartCookie = '',
+}: {
+  details: Awaited<ReturnType<typeof loadSquarespaceProduct>>
+  additionalFields?: Record<string, string | string[]>
+  cartCookie?: string
+}) {
+  const cookie = [details.cookie, cartCookie].filter(Boolean).join('; ')
+  const cartResponse = await fetch('https://www.vincentlomedia.com/api/commerce/shopping-cart/entries', {
+    method: 'POST',
+    headers: {
+      'add-to-cart-id': crypto.randomUUID(),
+      'content-type': 'application/json',
+      cookie,
+      origin: 'https://www.vincentlomedia.com',
+      referer: details.productUrl,
+      'user-agent': 'Mozilla/5.0',
+      'x-csrf-token': details.crumb,
+    },
+    body: JSON.stringify({
+      itemId: details.itemId,
+      sku: details.sku,
+      quantity: 1,
+      additionalFields: JSON.stringify(additionalFields),
+    }),
+  })
+
+  const cartText = await cartResponse.text()
+  let cartJson: any = null
+  try {
+    cartJson = JSON.parse(cartText)
+  } catch {
+    cartJson = null
+  }
+
+  if (!cartResponse.ok || !cartJson?.shoppingCart?.cartToken) {
+    const squarespaceMessage =
+      cartJson?.error === 'Form Errors'
+        ? parseFormError(cartJson.errors)
+        : cartJson?.message || cartJson?.error
+
+    return {
+      ok: false,
+      error: squarespaceMessage || 'Squarespace could not create a checkout cart.',
+      cartToken: '',
+      cookie: '',
+    }
+  }
+
+  const responseCookie = cookieHeaderFromSetCookie(cartResponse.headers.get('set-cookie') ?? '')
+
+  return {
+    ok: true,
+    cartToken: cartJson.shoppingCart.cartToken as string,
+    cookie: [cookie, responseCookie].filter(Boolean).join('; '),
+  }
+}
+
+function cookieHeaderFromSetCookie(setCookie: string) {
+  return setCookie
+    .split(/,(?=[^;,]+=)/)
+    .map((cookie) => cookie.split(';')[0]?.trim())
+    .filter(Boolean)
+    .join('; ')
 }
 
 function validateRequiredFields(
