@@ -895,6 +895,8 @@ function getGraphicLabel(pkg: MeetPackage) {
     'bundle-photos-static': 'Bundle',
     'bundle-highlight-static': 'Bundle',
     'photo-edited-package': 'Photos',
+    'photo-10-pack': 'Photos',
+    'photo-5-pack': 'Photos',
     'photo-single': 'Photo',
     'video-highlight-reel': 'Reel',
     'bench-highlight-reel': 'Reel',
