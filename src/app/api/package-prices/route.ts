@@ -143,7 +143,7 @@ async function loadPublicSquarespacePrices(): Promise<PackagePricesResponse> {
 }
 
 async function loadPublicSquarespaceProduct(productUrl: string) {
-  const url = new URL(productUrl)
+  const url = new URL(resolveSquarespaceStoreUrl(productUrl))
   url.searchParams.set('format', 'json')
 
   const response = await fetch(url, {
@@ -212,7 +212,7 @@ function normalizePrice(
   if (!basePrice) return null
 
   const salePrice = normalizeMoney(unwrap(pricing.salePrice))
-  const onSale = unwrap(pricing.onSale) === true
+  const onSale = isSalePriceActive(basePrice.value, salePrice?.value, unwrap(pricing.onSale))
 
   return {
     basePrice: basePrice.value,
@@ -241,11 +241,12 @@ function normalizePublicPrice(
     price: pricing.salePrice,
     priceMoney: pricing.salePriceMoney,
   })
+  const onSale = isSalePriceActive(basePrice.value, salePrice?.value, pricing.onSale)
 
   return {
     basePrice: basePrice.value,
     ...(salePrice ? { salePrice: salePrice.value } : {}),
-    onSale: pricing.onSale === true,
+    onSale,
     currency: basePrice.currency,
     fetchedAt,
     source: 'squarespace',
@@ -264,10 +265,20 @@ function buildLastKnownResponse(): PackagePricesResponse {
                 ...price,
                 source: 'last-known' as const,
               }
-            : null,
+            : buildCatalogPrice(pkg, new Date().toISOString()),
         ]
       }),
     ),
+  }
+}
+
+function buildCatalogPrice(pkg: (typeof packages)[number], fetchedAt: string): PackagePrice {
+  return {
+    basePrice: pkg.priceCad,
+    onSale: false,
+    currency: 'CAD',
+    fetchedAt,
+    source: 'catalog',
   }
 }
 
@@ -313,10 +324,23 @@ function normalizePublicMoney(value: PublicSquarespacePrice | undefined) {
   return null
 }
 
+function isSalePriceActive(basePrice: number, salePrice: number | undefined, onSale: boolean | undefined) {
+  if (typeof onSale === 'boolean') return onSale
+  return typeof salePrice === 'number' && salePrice > 0 && salePrice < basePrice
+}
+
 function slugFromProductUrl(productUrl: string) {
   return normalizeSlug(productUrl.split('/store/p/')[1]?.split(/[?#]/)[0])
 }
 
 function normalizeSlug(value: string | undefined) {
   return value?.replace(/^\/?store\/p\//, '').replace(/^\/+|\/+$/g, '')
+}
+
+function resolveSquarespaceStoreUrl(productUrl: string) {
+  const storeOrigin = process.env.SQUARESPACE_STORE_ORIGIN?.replace(/\/$/, '')
+  if (!storeOrigin) return productUrl
+
+  const url = new URL(productUrl)
+  return `${storeOrigin}${url.pathname}${url.search}${url.hash}`
 }

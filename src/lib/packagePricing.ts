@@ -1,4 +1,4 @@
-export type PackagePriceSource = 'squarespace' | 'last-known'
+export type PackagePriceSource = 'squarespace' | 'last-known' | 'catalog'
 
 export type PackagePrice = {
   basePrice: number

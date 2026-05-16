@@ -108,7 +108,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
-      checkoutUrl: `https://www.vincentlomedia.com/checkout?cartToken=${encodeURIComponent(
+      checkoutUrl: `${getSquarespaceStoreOrigin()}/checkout?cartToken=${encodeURIComponent(
         checkoutCartToken,
       )}`,
     })
@@ -137,7 +137,8 @@ function normalizeForm(form: CheckoutForm | undefined) {
 }
 
 async function loadSquarespaceProduct(productUrl: string) {
-  const productResponse = await fetch(`${productUrl}?format=json`, {
+  const resolvedProductUrl = resolveSquarespaceStoreUrl(productUrl)
+  const productResponse = await fetch(`${resolvedProductUrl}?format=json`, {
     headers: {
       accept: 'application/json',
       'user-agent': 'Mozilla/5.0',
@@ -159,7 +160,7 @@ async function loadSquarespaceProduct(productUrl: string) {
   }
 
   return {
-    productUrl,
+    productUrl: resolvedProductUrl,
     crumb,
     cookie: cookieHeaderFromSetCookie(cookie),
     itemId: product.item.id,
@@ -177,13 +178,14 @@ async function addSquarespaceCartEntry({
   cartCookie?: string
 }) {
   const cookie = [details.cookie, cartCookie].filter(Boolean).join('; ')
-  const cartResponse = await fetch('https://www.vincentlomedia.com/api/commerce/shopping-cart/entries', {
+  const storeOrigin = getSquarespaceStoreOrigin()
+  const cartResponse = await fetch(`${storeOrigin}/api/commerce/shopping-cart/entries`, {
     method: 'POST',
     headers: {
       'add-to-cart-id': crypto.randomUUID(),
       'content-type': 'application/json',
       cookie,
-      origin: 'https://www.vincentlomedia.com',
+      origin: storeOrigin,
       referer: details.productUrl,
       'user-agent': 'Mozilla/5.0',
       'x-csrf-token': details.crumb,
@@ -225,6 +227,18 @@ async function addSquarespaceCartEntry({
     cartToken: cartJson.shoppingCart.cartToken as string,
     cookie: [cookie, responseCookie].filter(Boolean).join('; '),
   }
+}
+
+function resolveSquarespaceStoreUrl(productUrl: string) {
+  const storeOrigin = process.env.SQUARESPACE_STORE_ORIGIN?.replace(/\/$/, '')
+  if (!storeOrigin) return productUrl
+
+  const url = new URL(productUrl)
+  return `${storeOrigin}${url.pathname}${url.search}${url.hash}`
+}
+
+function getSquarespaceStoreOrigin() {
+  return process.env.SQUARESPACE_STORE_ORIGIN?.replace(/\/$/, '') ?? 'https://www.vincentlomedia.com'
 }
 
 function cookieHeaderFromSetCookie(setCookie: string) {
