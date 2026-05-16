@@ -702,6 +702,20 @@ function formatCad(value: number) {
 }
 
 function getGraphicNumber(pkg: MeetPackage) {
+  const graphicNumberByPackageId: Record<string, string> = {
+    'bundle-ultimate-all-media': '3x',
+    'bundle-photos-highlight': '2x',
+    'bundle-photos-static': '2x',
+    'bundle-highlight-static': '2x',
+    'photo-edited-package': 'ALL',
+    'photo-single': '1',
+    'video-highlight-reel': '1',
+    'video-single-attempt': '1',
+    'bench-highlight-reel': '1',
+  }
+
+  if (graphicNumberByPackageId[pkg.id]) return graphicNumberByPackageId[pkg.id]
+
   const match = pkg.name.match(/\b(\d+)\b/)
   if (match) return match[1]
   if (pkg.category === 'bundle') return '2x'
@@ -712,6 +726,19 @@ function getGraphicNumber(pkg: MeetPackage) {
 }
 
 function getGraphicLabel(pkg: MeetPackage) {
+  const graphicLabelByPackageId: Record<string, string> = {
+    'bundle-ultimate-all-media': 'Bundle',
+    'bundle-photos-highlight': 'Bundle',
+    'bundle-photos-static': 'Bundle',
+    'bundle-highlight-static': 'Bundle',
+    'photo-edited-package': 'Photos',
+    'photo-single': 'Photo',
+    'video-highlight-reel': 'Reel',
+    'bench-highlight-reel': 'Reel',
+  }
+
+  if (graphicLabelByPackageId[pkg.id]) return graphicLabelByPackageId[pkg.id]
+
   if (/highlight/i.test(pkg.name)) return 'Reel'
   if (/static|handheld|attempt/i.test(pkg.name)) return 'Static'
   if (/photo/i.test(pkg.name)) return 'Photo'

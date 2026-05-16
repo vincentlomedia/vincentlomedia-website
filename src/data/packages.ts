@@ -13,7 +13,11 @@
 //   Copy of BENCH 3.mp4  → public/videos/sample-bench.mp4
 //   Copy of SQUAT 3.mp4  → public/videos/sample-squat.mp4
 //   Copy of DEADLIFT 3.mp4 → public/videos/sample-deadlift.mp4
-//   FELIX GUY HIGHLIGHT REEL.mp4 → public/videos/sample-highlight.mp4
+//   FELIX GUY HIGHLIGHT REEL.mp4 → public/videos/highlight-felix-guy.mp4
+//   JACK HIGHLIGHT REL.mp4 → public/videos/highlight-jack.mp4
+//   Copy of MARIE JOAQUIN HIGHLIGHT REEL.mp4 → public/videos/highlight-marie-joaquin.mp4
+//   Copy of CARTER BOGART HIGHLIGHT REEL.mp4 → public/videos/highlight-carter-bogart.mp4
+//   Bench only highlight examp.mp4 → public/videos/highlight-bench-only.mp4
 
 export type PackageCategory = 'bundle' | 'photo' | 'video' | 'bench' | 'addon' | 'event'
 export type FilterId = PackageCategory | 'all' | 'bestseller'
@@ -68,9 +72,9 @@ export const packages: MeetPackage[] = [
     squarespaceUrl:
       'https://www.vincentlomedia.com/store/p/edited-photos-and-highlight-reel-only-available-if-ordered-before-competition-adh4j-358eh-k6rwf-45852',
     isBestSeller: true,
-    samplePhotoPath: '/photos/_MG_0658.jpg',
-    sampleVideoPath: '/videos/sample-highlight.mp4',
-    previewVideoPath: '/videos/previews/highlight-preview.mp4',
+    samplePhotoPath: '/photos/video-posters/highlight-felix-guy.jpg',
+    sampleVideoPath: '/videos/highlight-felix-guy.mp4',
+    previewVideoPath: '/videos/previews/highlight-felix-guy-preview.mp4',
     sampleVideoOrientation: 'portrait',
   },
   {
@@ -92,9 +96,9 @@ export const packages: MeetPackage[] = [
     squarespaceUrl:
       'https://www.vincentlomedia.com/store/p/edited-photos-and-highlight-reel-only-available-if-ordered-before-competition-adh4j-358eh-k6rwf',
     isBestSeller: true,
-    samplePhotoPath: '/photos/_MG_0327.jpg',
-    sampleVideoPath: '/videos/sample-highlight.mp4',
-    previewVideoPath: '/videos/previews/highlight-preview.mp4',
+    samplePhotoPath: '/photos/video-posters/highlight-jack.jpg',
+    sampleVideoPath: '/videos/highlight-jack.mp4',
+    previewVideoPath: '/videos/previews/highlight-jack-preview.mp4',
     sampleVideoOrientation: 'portrait',
   },
   {
@@ -121,23 +125,23 @@ export const packages: MeetPackage[] = [
   {
     id: 'bundle-highlight-static',
     name: 'Highlight Reel and Static Videos',
-    slug: 'highlight-reel-and-static-videos-kraken-open-2026',
+    slug: 'highlight-reel-and-static-videos',
     category: 'bundle',
     priceCad: 225,
     salePriceCad: 200,
     badges: ['Best Value', 'New'],
     tagline: 'Every video format in one bundle.',
     description:
-      'Kraken Open 2026 video bundle with all 9 static lift videos plus a polished highlight reel.',
+      'A complete video bundle with all 9 static lift videos plus a polished highlight reel.',
     deliverables: {
       staticVideos: '9 handheld lift videos (all attempts, all lifts)',
       highlightReel: 'Music-synced cinematic highlight reel',
     },
     deliveryWindow: 'Videos: 14-21 days · Reel: up to 45 days',
     squarespaceUrl: 'https://www.vincentlomedia.com/store/p/full-power-photos-and-videos-623nt-pc9en',
-    eventLabel: 'Kraken Open 2026',
-    sampleVideoPath: '/videos/sample-highlight.mp4',
-    previewVideoPath: '/videos/previews/highlight-preview.mp4',
+    samplePhotoPath: '/photos/video-posters/highlight-marie-joaquin.jpg',
+    sampleVideoPath: '/videos/highlight-marie-joaquin.mp4',
+    previewVideoPath: '/videos/previews/highlight-marie-joaquin-preview.mp4',
     sampleVideoOrientation: 'portrait',
   },
 
@@ -145,82 +149,79 @@ export const packages: MeetPackage[] = [
   {
     id: 'video-highlight-reel',
     name: '3 Lift Highlight Reel',
-    slug: '3-lift-highlight-reel-kraken-open-2026',
+    slug: '3-lift-highlight-reel',
     category: 'video',
     priceCad: 150,
     salePriceCad: 140,
     badges: ['Most Popular'],
     tagline: 'Your lifts. Cinematic.',
     description:
-      'A professionally edited music-synced highlight reel for Kraken Open 2026 covering your best attempts from all three lifts.',
+      'A professionally edited music-synced highlight reel covering your best attempts from all three lifts.',
     deliverables: {
       highlightReel: 'Music-synced cinematic reel, best attempts from squat, bench, deadlift',
     },
     deliveryWindow: 'Up to 45 days',
     squarespaceUrl: 'https://www.vincentlomedia.com/store/p/3-lift-highlight-reel-2828x-w9t94-ykm3h',
-    eventLabel: 'Kraken Open 2026',
     isBestSeller: true,
-    sampleVideoPath: '/videos/sample-highlight.mp4',
-    previewVideoPath: '/videos/previews/highlight-preview.mp4',
+    samplePhotoPath: '/photos/video-posters/highlight-carter-bogart.jpg',
+    sampleVideoPath: '/videos/highlight-carter-bogart.mp4',
+    previewVideoPath: '/videos/previews/highlight-carter-bogart-preview.mp4',
     sampleVideoOrientation: 'portrait',
   },
   {
     id: 'video-9-static',
     name: '9 Lift Static Videos',
-    slug: '9-lift-static-videos-kraken-open-2026',
+    slug: '9-lift-static-videos',
     category: 'video',
     priceCad: 125,
     salePriceCad: 115,
     badges: ['For Coaches'],
     tagline: 'Every attempt. Every lift.',
     description:
-      'All 9 Kraken Open 2026 videos — 3 attempts for each lift — shot handheld from the platform.',
+      'All 9 lift videos — 3 attempts for each lift — shot handheld from the platform.',
     deliverables: {
       staticVideos: '9 handheld videos: squat × 3, bench × 3, deadlift × 3',
     },
     deliveryWindow: '14-21 days',
     squarespaceUrl: 'https://www.vincentlomedia.com/store/p/9-lift-static-video-jpaan-bzjd5-5858x',
-    eventLabel: 'Kraken Open 2026',
     sampleVideoPath: '/videos/sample-squat.mp4',
     previewVideoPath: '/videos/previews/squat-preview.mp4',
   },
   {
     id: 'video-3-attempts',
     name: '3 Attempts Video',
-    slug: '3-attempts-video-kraken-open-2026',
+    slug: '3-attempts-video',
     category: 'video',
     priceCad: 60,
     salePriceCad: 52.5,
     badges: [],
     tagline: 'All 3 attempts of one lift.',
     description:
-      'Three handheld videos at Kraken Open 2026 covering all 3 attempts of a single lift. Choose squat, bench, or deadlift.',
+      'Three handheld videos covering all 3 attempts of a single lift. Choose squat, bench, or deadlift.',
     deliverables: {
       staticVideos: '3 handheld videos — one lift, all attempts',
     },
     deliveryWindow: '14-21 days',
     squarespaceUrl: 'https://www.vincentlomedia.com/store/p/single-photo-zb94d-cedwb-h98ht-tjm4z-bkay9',
-    eventLabel: 'Kraken Open 2026',
     sampleVideoPath: '/videos/sample-deadlift.mp4',
     previewVideoPath: '/videos/previews/deadlift-preview.mp4',
   },
   {
     id: 'video-single-attempt',
     name: 'Single Attempt Video',
-    slug: 'single-attempt-video-kraken-open-2026',
+    slug: 'single-attempt-video',
     category: 'video',
     priceCad: 25,
     salePriceCad: 20,
     badges: ['Best Price'],
     tagline: 'One lift. One attempt.',
     description:
-      'A single handheld video of one Kraken Open 2026 attempt. Great for sharing a PR or testing quality before committing to a larger package.',
+      'A single handheld video of one lift attempt. Great for sharing a PR or testing quality before committing to a larger package.',
     deliverables: {
       staticVideos: '1 handheld video of a single attempt',
     },
     deliveryWindow: '14-21 days',
     squarespaceUrl: 'https://www.vincentlomedia.com/store/p/single-photo-zb94d-93da3-86b4d-k8ger',
-    eventLabel: 'Kraken Open 2026',
     sampleVideoPath: '/videos/sample-bench.mp4',
     previewVideoPath: '/videos/previews/bench-preview.mp4',
   },
@@ -317,8 +318,10 @@ export const packages: MeetPackage[] = [
     },
     deliveryWindow: 'Up to 45 days',
     squarespaceUrl: 'https://www.vincentlomedia.com/store/p/bench-only-static-videos-47n7k-a52w2-ppnw2',
-    sampleVideoPath: '/videos/sample-bench.mp4',
-    previewVideoPath: '/videos/previews/bench-preview.mp4',
+    samplePhotoPath: '/photos/video-posters/highlight-bench-only.jpg',
+    sampleVideoPath: '/videos/highlight-bench-only.mp4',
+    previewVideoPath: '/videos/previews/highlight-bench-only-preview.mp4',
+    sampleVideoOrientation: 'portrait',
   },
 
   // ── ADD-ON ────────────────────────────────────────────────────────────────
