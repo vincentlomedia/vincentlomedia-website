@@ -101,7 +101,7 @@ function PackagesContent() {
                 Competition-day photography and video packages. Delivered via Google Drive.
               </motion.p>
               <motion.p variants={fadeUp} className="text-sm text-gold font-medium">
-                Starting from <span className="font-bold">$15 CAD</span>
+                Starting from <span className="font-bold">$15</span>
               </motion.p>
             </motion.div>
           </div>
@@ -133,7 +133,7 @@ function PackagesContent() {
 
             {/* Result count */}
             <p className="mono-label mb-4 text-[10px] text-white/40 md:mb-6">
-              {filtered.length} package{filtered.length !== 1 ? 's' : ''} · All prices in CAD
+              {filtered.length} package{filtered.length !== 1 ? 's' : ''}
             </p>
 
             {/* Event grouped view */}

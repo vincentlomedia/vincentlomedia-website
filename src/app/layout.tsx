@@ -24,13 +24,13 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   // SEO_TITLE: 'Powerlifting Meet Photography & Video Packages | Vincent Lo Media'
-  // SEO_DESC:  'Competition-day photos, static lift videos, and highlight reels. Shot by a competitive powerlifter. Packages from $15 CAD.'
+  // SEO_DESC:  'Competition-day photos, static lift videos, and highlight reels. Shot by a competitive powerlifter. Packages from $15.'
   title: {
     default: 'Vincent Lo Media | Powerlifting Photography & Video',
     template: '%s | Vincent Lo Media',
   },
   description:
-    'Powerlifting meet photography and video packages. Competition-day photos, static lift videos, and highlight reels shot by a competitive powerlifter. Packages from $15 CAD.',
+    'Powerlifting meet photography and video packages. Competition-day photos, static lift videos, and highlight reels shot by a competitive powerlifter. Packages from $15.',
   metadataBase: new URL('https://www.vincentlomedia.com'),
   icons: {
     icon: '/logo/watermark.png',

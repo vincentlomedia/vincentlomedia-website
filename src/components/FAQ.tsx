@@ -10,7 +10,7 @@ import clsx from 'clsx'
 export const FAQ_ITEMS = [
   {
     q: 'What does Vincent Lo Media sell?',
-    a: 'VLM sells powerlifting meet photography and video packages. Products include edited photo sets, handheld static lift videos, cinematic highlight reels, and bundles. Packages start from $15 CAD and are delivered via Google Drive.',
+    a: 'VLM sells powerlifting meet photography and video packages. Products include edited photo sets, handheld static lift videos, cinematic highlight reels, and bundles. Packages start from $15 and are delivered via Google Drive.',
   },
   {
     q: 'Where does Vincent Lo Media shoot?',

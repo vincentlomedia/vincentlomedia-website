@@ -1,5 +1,5 @@
 // SEO_TITLE: Powerlifting Meet Photography & Video Packages | Vincent Lo Media
-// SEO_DESC:  Competition-day photos, static lift videos, and highlight reels. Starting from $15 CAD.
+// SEO_DESC:  Competition-day photos, static lift videos, and highlight reels. Starting from $15.
 
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'

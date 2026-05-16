@@ -283,8 +283,7 @@ export default function PackageCard({ pkg, index = 0, autoPreview = false }: Pro
               </>
             ) : (
               <span className="text-2xl font-display text-white">
-                {formatCad(pkg.priceCad).replace(' CAD', '')}{' '}
-                <span className="text-sm font-sans font-normal text-zinc-500">CAD</span>
+                {formatCad(pkg.priceCad)}
               </span>
             )}
           </div>
@@ -738,7 +737,7 @@ function formatCad(value: number) {
   return `$${value.toLocaleString('en-CA', {
     minimumFractionDigits: value % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2,
-  })} CAD`
+  })}`
 }
 
 function getGraphicNumber(pkg: MeetPackage) {

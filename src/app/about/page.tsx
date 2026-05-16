@@ -15,7 +15,7 @@ const STATS = [
   { value: '5+', label: 'Years on the platform' },
   { value: '20+', label: 'Meets covered by VLM' },
   { value: '1000+', label: 'Competition photos delivered' },
-  { value: '$15', label: 'Starting price in CAD' },
+  { value: '$15', label: 'Starting price' },
 ]
 
 const PROMO_VIDEOS = [

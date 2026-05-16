@@ -13,7 +13,7 @@ export const SEO = {
     home: {
       title: 'Powerlifting Meet Photography & Video Packages | Vincent Lo Media',
       description:
-        'Competition-day photos, static lift videos, and highlight reels for powerlifters. Shot by a competitive powerlifter. Packages from $15 CAD.',
+        'Competition-day photos, static lift videos, and highlight reels for powerlifters. Shot by a competitive powerlifter. Packages from $15.',
       keywords:
         'powerlifting photography, powerlifting video, meet photography Canada, powerlifting highlight reel, static lift videos, competition photography',
     },

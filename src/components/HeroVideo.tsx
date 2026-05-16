@@ -88,7 +88,7 @@ export default function HeroVideo() {
             className="max-w-[58ch] text-base leading-relaxed text-white/75 md:text-lg"
           >
             Competition-day photos, static lift videos, and highlight reels for lifters
-            who want the meet captured properly. <span className="text-white">Packages from $15 CAD.</span>
+            who want the meet captured properly. <span className="text-white">Packages from $15.</span>
           </motion.p>
 
           {/* CTAs */}
