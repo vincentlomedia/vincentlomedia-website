@@ -1,0 +1,14 @@
+.DS_Store
+.claude/
+.next/
+.playwright-mcp/
+node_modules/
+tsconfig.tsbuildinfo
+
+# Source/reference assets already copied into public/ for the website.
+Product description Samples/
+Website Logo/
+Website photo assets/
+website video assets/
+Vincent Lo Media Website notes.docx
+public/videos/originals-deploy-backup/
