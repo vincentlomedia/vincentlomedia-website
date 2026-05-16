@@ -105,14 +105,6 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-            <div className="mt-6">
-              <p className="text-xs text-zinc-600">
-                All media delivered via Google Drive.
-              </p>
-              <p className="text-xs text-zinc-600 mt-1">
-                Checkout powered by Squarespace.
-              </p>
-            </div>
           </div>
         </div>
 
