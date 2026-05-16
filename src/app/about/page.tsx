@@ -242,7 +242,7 @@ function PromoVideoTile({ video }: { video: (typeof PROMO_VIDEOS)[number] }) {
     <video
       src={src}
       poster={video.poster}
-      className="aspect-video w-full object-cover opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+      className="h-auto w-full bg-black object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100"
       autoPlay
       muted
       loop
