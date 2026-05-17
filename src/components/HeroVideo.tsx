@@ -78,7 +78,7 @@ export default function HeroVideo() {
 
       <div className="absolute left-0 right-0 top-[88px] z-10 hidden text-white/55 md:block">
         <div className="section-shell flex items-center justify-between">
-          <p className="mono-label text-[10px]">VLM · EST. 2023 · VICTORIA, BC</p>
+          <p className="mono-label text-[10px]">VLM · EST. 2023 · VANCOUVER, BC, CANADA</p>
           <p className="mono-label text-[10px]">REEL 03 · MEET DAY LOOP · LIVE</p>
         </div>
       </div>

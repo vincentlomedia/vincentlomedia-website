@@ -117,7 +117,7 @@ export default function AboutPage() {
                 <div className="absolute bottom-4 left-4 px-3 py-2 bg-vlm-black/80 backdrop-blur-sm rounded border border-white/10">
                   <div className="flex items-center gap-2">
                     <MapPin size={12} className="text-gold" />
-                    <span className="text-xs text-zinc-400">Victoria, BC · Canada</span>
+                    <span className="text-xs text-zinc-400">Vancouver, BC · Canada</span>
                   </div>
                 </div>
               </motion.div>
@@ -169,7 +169,7 @@ export default function AboutPage() {
                   {[
                     { icon: Dumbbell, text: 'Sanctioned powerlifting meets across Canada' },
                     { icon: Camera, text: 'Powerlifter-led photo and video coverage' },
-                    { icon: MapPin, text: 'Based in Victoria, BC — available for travel' },
+                    { icon: MapPin, text: 'Based in Vancouver, BC, Canada — available for travel' },
                   ].map(({ icon: Icon, text }) => (
                     <div key={text} className="flex items-center gap-3 text-sm text-zinc-300">
                       <Icon size={16} className="text-gold flex-shrink-0" />
