@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -10,6 +10,9 @@ import { fadeUp, stagger } from '@/lib/motion'
 export default function HeroVideo() {
   const prefersReduced = useReducedMotion()
   const [loadVideo, setLoadVideo] = useState(false)
+  const [videoSrc, setVideoSrc] = useState(HERO_VIDEO_HQ)
+  const hasStartedHqRef = useRef(false)
+  const hasFallenBackRef = useRef(false)
 
   useEffect(() => {
     if (prefersReduced) return
@@ -18,20 +21,44 @@ export default function HeroVideo() {
     return () => window.clearTimeout(timeout)
   }, [prefersReduced])
 
+  useEffect(() => {
+    if (!loadVideo || prefersReduced || videoSrc !== HERO_VIDEO_HQ) return
+
+    const timeout = window.setTimeout(() => {
+      if (!hasStartedHqRef.current) useFallbackVideo()
+    }, 4500)
+
+    return () => window.clearTimeout(timeout)
+  }, [loadVideo, prefersReduced, videoSrc])
+
+  const useFallbackVideo = () => {
+    if (hasFallenBackRef.current || videoSrc === HERO_VIDEO_FALLBACK) return
+    hasFallenBackRef.current = true
+    setVideoSrc(HERO_VIDEO_FALLBACK)
+  }
+
   return (
     <section className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-black">
-      {/* Background video — ASSET: public/videos/hero.mp4 (source: "website video assets/vlm promo vid_3.mp4") */}
+      {/* Background video — prefers HQ, falls back to optimized low-bandwidth asset if loading stalls. */}
       <div className="absolute inset-0">
         {!prefersReduced && (
           <video
-            src={loadVideo ? '/videos/previews/hero-preview.mp4' : undefined}
+            src={loadVideo ? videoSrc : undefined}
             className="video-fill"
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster="/photos/_MG_0658.jpg"
+            onCanPlayThrough={() => {
+              hasStartedHqRef.current = true
+            }}
+            onPlaying={() => {
+              hasStartedHqRef.current = true
+            }}
+            onError={useFallbackVideo}
+            onStalled={useFallbackVideo}
             aria-hidden="true"
           />
         )}
@@ -144,3 +171,6 @@ const TRUST_ITEMS = [
   'Static videos in 14–21 days',
   'Highlight reels up to 45 days',
 ]
+
+const HERO_VIDEO_HQ = '/videos/about/hero-hq.mp4'
+const HERO_VIDEO_FALLBACK = '/videos/hero.mp4'
