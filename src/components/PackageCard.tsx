@@ -434,6 +434,7 @@ function CheckoutModal({
     firstName: '',
     lastName: '',
     email: '',
+    competitionName: '',
     meetDetails: '',
     clothing: '',
     song: '',

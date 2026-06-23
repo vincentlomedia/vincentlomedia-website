@@ -10,6 +10,7 @@ type CheckoutForm = {
   firstName?: string
   lastName?: string
   email?: string
+  competitionName?: string
   meetDetails?: string
   clothing?: string
   song?: string
@@ -126,6 +127,7 @@ function normalizeForm(form: CheckoutForm | undefined) {
     firstName: form?.firstName?.trim() ?? '',
     lastName: form?.lastName?.trim() ?? '',
     email: form?.email?.trim() ?? '',
+    competitionName: form?.competitionName?.trim() ?? '',
     meetDetails: form?.meetDetails?.trim() ?? '',
     clothing: form?.clothing?.trim() ?? '',
     song: form?.song?.trim() ?? '',

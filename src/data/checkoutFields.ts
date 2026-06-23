@@ -1,6 +1,7 @@
 export type CheckoutFieldKey =
   | 'fullName'
   | 'email'
+  | 'competitionName'
   | 'song'
   | 'clothing'
   | 'meetDetails'
@@ -36,6 +37,14 @@ const HIGHLIGHT_REEL_FIELDS: CheckoutFieldConfig[] = [
     required: true,
     squarespaceFieldId: 'email-yui_3_17_2_1_1709169259666_10472',
     placeholder: 'example@gmail.com',
+  },
+  {
+    key: 'competitionName',
+    type: 'text',
+    label: 'Name of competition',
+    required: true,
+    squarespaceFieldId: 'text-0a07c980-c112-4eb3-a681-9a7d0a1dd174',
+    placeholder: 'Summer Open 2026',
   },
   {
     key: 'song',
@@ -88,6 +97,14 @@ const CONTACT_INFO_FIELDS: CheckoutFieldConfig[] = [
     placeholder: 'example@gmail.com',
   },
   {
+    key: 'competitionName',
+    type: 'text',
+    label: 'Name of competition',
+    required: true,
+    squarespaceFieldId: 'text-0876517b-4e5b-4331-b99a-bbcb49552940',
+    placeholder: 'Summer Open 2026',
+  },
+  {
     key: 'clothing',
     type: 'text',
     label: 'Clothing worn',
@@ -123,6 +140,14 @@ const VIDEO_ATTEMPT_FIELDS: CheckoutFieldConfig[] = [
     squarespaceFieldId: 'name-yui_3_17_2_1_1749457434887_4093',
   },
   {
+    key: 'competitionName',
+    type: 'text',
+    label: 'Name of competition',
+    required: true,
+    squarespaceFieldId: 'text-f4b32ee0-8e44-4155-9c84-3150259de7b3',
+    placeholder: 'Summer Open 2026',
+  },
+  {
     key: 'meetDetails',
     type: 'textarea',
     label: 'Day, session, event/attempt wanted',
@@ -151,6 +176,15 @@ const VIDEO_ATTEMPT_FIELDS: CheckoutFieldConfig[] = [
 
 const PHOTO_PACK_FIELDS: CheckoutFieldConfig[] = [
   {
+    key: 'competitionName',
+    type: 'text',
+    label: 'Name of competition',
+    required: true,
+    squarespaceFieldId: 'text-a675c784-fb84-4888-be76-2e532fd59520',
+    placeholder: 'Summer Open 2026',
+    description: 'Name of the competition you are competing at',
+  },
+  {
     key: 'fullName',
     type: 'name',
     label: 'Full name',
@@ -169,7 +203,16 @@ const PHOTO_PACK_FIELDS: CheckoutFieldConfig[] = [
 
 export const checkoutFieldsByPackageId: Record<string, CheckoutFieldConfig[]> = {
   'bundle-ultimate-all-media': [
-    ...HIGHLIGHT_REEL_FIELDS.slice(0, 5),
+    ...HIGHLIGHT_REEL_FIELDS.slice(0, 2),
+    {
+      key: 'competitionName',
+      type: 'text',
+      label: 'Name of competition',
+      required: true,
+      squarespaceFieldId: 'text-223462b3-9281-4a30-9435-e089be9f77ea',
+      placeholder: 'Summer Open 2026',
+    },
+    ...HIGHLIGHT_REEL_FIELDS.slice(3, 6),
     {
       key: 'attemptWeightPreference',
       type: 'select',
@@ -187,7 +230,7 @@ export const checkoutFieldsByPackageId: Record<string, CheckoutFieldConfig[]> = 
       squarespaceFieldId: 'phone-00f64147-b078-486a-bd76-27e1275e1976',
       description: 'Used only if email delivery/contact does not work.',
     },
-    HIGHLIGHT_REEL_FIELDS[5],
+    HIGHLIGHT_REEL_FIELDS[6],
   ],
   'bundle-photos-highlight': HIGHLIGHT_REEL_FIELDS,
   'bundle-photos-static': CONTACT_INFO_FIELDS,
