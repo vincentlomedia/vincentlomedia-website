@@ -10,7 +10,7 @@ export const galleries: GalleryLink[] = [
     title: 'Twin Rivers 2026 BCPA',
     meta: 'BCPA powerlifting gallery',
     href: 'https://vincentlomedia.pixieset.com/twinrivers2026bcpa/',
-    previewImage: 'https://drive.google.com/thumbnail?id=13BqQSHKLAzvkMKRc1IgrRt6Iixyt1mS_&sz=w1600',
+    previewImage: '/photos/twin-rivers-2026-bcpa.jpg',
   },
   {
     title: 'Twin Rivers WRPF Powerlifting',
