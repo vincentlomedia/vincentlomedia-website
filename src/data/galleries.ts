@@ -7,6 +7,12 @@ export interface GalleryLink {
 
 export const galleries: GalleryLink[] = [
   {
+    title: 'Twin Rivers 2026 Strongman',
+    meta: 'BCPA powerlifting gallery',
+    href: 'https://vincentlomedia.pixieset.com/twinrivers2026strongman/',
+    previewImage: '/photos/twin-rivers-2026-strongman.jpg',
+  },
+  {
     title: 'Twin Rivers 2026 BCPA',
     meta: 'BCPA powerlifting gallery',
     href: 'https://vincentlomedia.pixieset.com/twinrivers2026bcpa/',
