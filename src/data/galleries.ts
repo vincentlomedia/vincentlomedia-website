@@ -8,7 +8,7 @@ export interface GalleryLink {
 export const galleries: GalleryLink[] = [
   {
     title: 'Summer Open 2026',
-    meta: 'BCPA Powerlifting Meet',
+    meta: 'BCPA Powerlifting Gallery',
     href: 'https://vincentlomedia.pixieset.com/summeropen2026/',
     previewImage: '/photos/summer-open-2026.jpg',
   },
