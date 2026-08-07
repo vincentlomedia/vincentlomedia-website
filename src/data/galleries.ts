@@ -7,6 +7,12 @@ export interface GalleryLink {
 
 export const galleries: GalleryLink[] = [
   {
+    title: 'Summer Open 2026',
+    meta: 'BCPA Powerlifting Meet',
+    href: 'https://vincentlomedia.pixieset.com/summeropen2026/',
+    previewImage: '/photos/summer-open-2026.jpg',
+  },
+  {
     title: 'Twin Rivers 2026 WRPF',
     meta: 'WRPF powerlifting gallery',
     href: 'https://vincentlomedia.pixieset.com/twinrivers2026wrpf/',
