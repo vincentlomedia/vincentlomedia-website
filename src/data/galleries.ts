@@ -7,6 +7,12 @@ export interface GalleryLink {
 
 export const galleries: GalleryLink[] = [
   {
+    title: 'Provincials Championships 2026',
+    meta: 'BCPA Powerlifting Meet (Days will be added upon completion)',
+    href: 'https://vincentlomedia.pixieset.com/bcpaprovincialschampionship2026/',
+    previewImage: '/photos/provincials-championships-2026.jpg',
+  },
+  {
     title: 'Summer Open 2026',
     meta: 'BCPA Powerlifting Gallery',
     href: 'https://vincentlomedia.pixieset.com/summeropen2026/',
