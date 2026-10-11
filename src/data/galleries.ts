@@ -7,6 +7,12 @@ export interface GalleryLink {
 
 export const galleries: GalleryLink[] = [
   {
+    title: 'Cascioli Classic',
+    meta: 'BCPA Powerlifting Gallery',
+    href: 'https://vincentlomedia.pixieset.com/cascioliclassic/',
+    previewImage: '/photos/cascioli-classic.jpg',
+  },
+  {
     title: 'Provincials Championships 2026',
     meta: 'BCPA Powerlifting Meet (Days will be added upon completion)',
     href: 'https://vincentlomedia.pixieset.com/bcpaprovincialschampionship2026/',
