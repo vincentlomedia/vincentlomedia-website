@@ -7,6 +7,12 @@ export interface GalleryLink {
 
 export const galleries: GalleryLink[] = [
   {
+    title: 'SFU Classic',
+    meta: 'BCPA Powerlifting Gallery',
+    href: 'https://vincentlomedia.pixieset.com/sfuclassic/',
+    previewImage: '/photos/sfu-classic.jpg',
+  },
+  {
     title: 'Cascioli Classic',
     meta: 'BCPA Powerlifting Gallery',
     href: 'https://vincentlomedia.pixieset.com/cascioliclassic/',
