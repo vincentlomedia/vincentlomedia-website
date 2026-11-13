@@ -7,6 +7,12 @@ export interface GalleryLink {
 
 export const galleries: GalleryLink[] = [
   {
+    title: 'Victoria Barbell 2026',
+    meta: 'BCPA Powerlifting Gallery',
+    href: 'https://vincentlomedia.pixieset.com/victoriabarbell2026/',
+    previewImage: '/photos/victoria-barbell-2026.jpg',
+  },
+  {
     title: 'SFU Classic',
     meta: 'BCPA Powerlifting Gallery',
     href: 'https://vincentlomedia.pixieset.com/sfuclassic/',
